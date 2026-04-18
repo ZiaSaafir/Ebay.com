@@ -4,6 +4,7 @@ import { saveToken } from "../utils/auth";
 
 function Login() {
     const BASEURL = import.meta.env.VITE_DJANGO_BASE_URL;
+    const navigate = useNavigate();
 
     const [form, setForm] = useState({
         username: "",
@@ -13,9 +14,7 @@ function Login() {
     const [msg, setMsg] = useState("");
     const [loading, setLoading] = useState(false);
 
-    const navigate = useNavigate();
-
-    // Handle input change
+    // Handle Input Change
     const handleChange = (e) => {
         setForm({
             ...form,
@@ -23,9 +22,10 @@ function Login() {
         });
     };
 
-    // Handle submit
+    // Handle Login
     const handleSubmit = async (e) => {
         e.preventDefault();
+
         setLoading(true);
         setMsg("");
 
@@ -42,87 +42,111 @@ function Login() {
 
             if (res.ok) {
                 saveToken(data);
-                setMsg("Login successful");
+                setMsg("Login successful!");
 
                 setTimeout(() => {
                     navigate("/");
                 }, 1000);
             } else {
-                setMsg(data.detail || "Invalid credentials");
+                setMsg(data.detail || "Invalid username or password.");
             }
+
         } catch (error) {
-            setMsg("Something went wrong");
+            setMsg("Server error. Please try again.");
         } finally {
             setLoading(false);
         }
     };
 
     return (
-        <div className="min-h-screen flex items-center justify-center bg-gray-100">
-            <div className="bg-white p-8 rounded-2xl shadow-lg w-full max-w-md">
-                <h2 className="text-2xl font-bold mb-6 text-center">Welcome Back</h2>
-                
-                <p className="text-gray-600 text-center mb-6">Login to your account</p>
+        <div className="min-h-screen bg-gray-100 flex items-center justify-center px-4">
 
-                <form onSubmit={handleSubmit} className="space-y-4">
+            <div className="bg-white w-full max-w-md rounded-2xl shadow-xl p-8">
+
+                {/* Title */}
+                <h1 className="text-3xl font-bold text-center text-gray-800">
+                    Welcome Back 👋
+                </h1>
+
+                <p className="text-gray-500 text-center mt-2 mb-6">
+                    Login to your Epnic account
+                </p>
+
+                {/* Form */}
+                <form onSubmit={handleSubmit} className="space-y-5">
+
+                    {/* Username */}
                     <div>
-                        <label className="block text-gray-700 text-sm font-medium mb-2">
+                        <label className="block text-sm font-medium text-gray-700 mb-2">
                             Username
                         </label>
+
                         <input
                             type="text"
                             name="username"
-                            placeholder="Enter your username"
                             value={form.username}
                             onChange={handleChange}
+                            placeholder="Enter username"
                             required
-                            className="w-full border border-gray-300 p-2 rounded-lg focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition"
+                            className="w-full border border-gray-300 rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500"
                         />
                     </div>
 
+                    {/* Password */}
                     <div>
-                        <label className="block text-gray-700 text-sm font-medium mb-2">
+                        <label className="block text-sm font-medium text-gray-700 mb-2">
                             Password
                         </label>
+
                         <input
                             type="password"
                             name="password"
-                            placeholder="Enter your password"
                             value={form.password}
                             onChange={handleChange}
+                            placeholder="Enter password"
                             required
-                            className="w-full border border-gray-300 p-2 rounded-lg focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition"
+                            className="w-full border border-gray-300 rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500"
                         />
                     </div>
 
+                    {/* Button */}
                     <button
                         type="submit"
                         disabled={loading}
-                        className="w-full bg-blue-600 text-white py-2 rounded-lg font-semibold hover:bg-blue-700 transition disabled:bg-gray-400 disabled:cursor-not-allowed"
+                        className="w-full bg-blue-600 hover:bg-blue-700 text-white py-3 rounded-lg font-semibold transition disabled:bg-gray-400"
                     >
                         {loading ? "Logging in..." : "Login"}
                     </button>
 
+                    {/* Message */}
                     {msg && (
-                        <p className={`text-center text-sm ${msg.includes("successful") ? 'text-green-600' : 'text-red-600'}`}>
+                        <p
+                            className={`text-center text-sm font-medium ${
+                                msg.includes("successful")
+                                    ? "text-green-600"
+                                    : "text-red-600"
+                            }`}
+                        >
                             {msg}
                         </p>
                     )}
                 </form>
 
-                {/* Signup Option */}
-                <div className="mt-6 pt-4 border-t text-center">
+                {/* Signup */}
+                <div className="mt-6 border-t pt-5 text-center">
                     <p className="text-gray-600 text-sm">
-                        Don't have an account?{" "}
-                        <Link 
-                            to="/signup" 
-                            className="text-blue-600 font-semibold hover:text-blue-700 hover:underline transition"
+                        Don’t have an account?{" "}
+                        <Link
+                            to="/signup"
+                            className="text-blue-600 font-semibold hover:underline"
                         >
-                            Sign up here
+                            Sign Up
                         </Link>
                     </p>
                 </div>
+
             </div>
+
         </div>
     );
 }

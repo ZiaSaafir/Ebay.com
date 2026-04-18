@@ -12,18 +12,18 @@ export const getAccessToken = () => {
     return localStorage.getItem("access_token");
 };
 
-export const authFetch = (url, options = {}) => {
+export const authFetch = async (url, options = {}) => {
     const token = getAccessToken();
-    
+
     const headers = {
-        'Content-Type': 'application/json',
+        "Content-Type": "application/json",
         ...options.headers,
     };
-    
+
     if (token) {
-        headers['Authorization'] = `Bearer ${token}`;
+        headers["Authorization"] = `Bearer ${token}`;
     }
-    
+
     return fetch(url, {
         ...options,
         headers,

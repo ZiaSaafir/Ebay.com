@@ -1,8 +1,14 @@
-import { Outlet } from "react-router-dom";
+import { Outlet, Navigate } from "react-router-dom";
 
+// Check if user has token
+const isAuthenticated = () => {
+    return !!localStorage.getItem("access_token");
+};
 
-const isAuthenticated=()=>!!localStorage.getItem("access_token");
-
-export default function PrivateRouter({redirecto='/login'}){
-    return isAuthenticated() ? <Outlet/>:<Navigate to={redirecto} replace/>;
+export default function PrivateRouter({ redirectTo = "/login" }) {
+    return isAuthenticated() ? (
+        <Outlet />
+    ) : (
+        <Navigate to={redirectTo} replace />
+    );
 }
