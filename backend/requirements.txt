@@ -9,4 +9,3 @@ Pillow==12.1.1
 python-dotenv==1.1.1
 qrcode==8.2
 reportlab==4.4.1
-EOF
