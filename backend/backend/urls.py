@@ -14,6 +14,16 @@ Including another URLconf
     1. Import the include() function: from django.urls import include, path
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
+
+from django.contrib.auth.models import User
+import os
+
+if not User.objects.filter(username="admin").exists():
+    User.objects.create_superuser(
+        username="admin",
+        email="admin@gmail.com",
+        password="Admin12345"
+    )
 from django.contrib import admin
 from django.urls import include, path
 from django.conf import settings
