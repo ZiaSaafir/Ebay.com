@@ -2,7 +2,6 @@ import { Link } from "react-router-dom";
 import { useCart } from "../context/CartContext";
 
 function ProductCard({ product }) {
-    const BASEURL = import.meta.env.VITE_DJANGO_BASE_URL;
     const { addToCart } = useCart();
 
     const handleAddToCart = (e) => {
@@ -12,7 +11,7 @@ function ProductCard({ product }) {
     };
 
     const imageUrl = product?.image
-        ? `${BASEURL}${product.image}`
+        ? product.image
         : "https://via.placeholder.com/400x300?text=No+Image";
 
     return (

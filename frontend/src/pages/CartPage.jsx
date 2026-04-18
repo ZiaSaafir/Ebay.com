@@ -12,9 +12,22 @@ function CartPage() {
 
     const BASEURL = import.meta.env.VITE_DJANGO_BASE_URL;
 
+    // Smart image helper
+    const getImageUrl = (image) => {
+        if (!image) {
+            return "https://via.placeholder.com/150?text=No+Image";
+        }
+
+        return image.startsWith("http")
+            ? image
+            : `${BASEURL}${image}`;
+    };
+
     return (
         <div className="pt-20 min-h-screen bg-gray-100 px-4 md:px-8 py-8">
             <div className="max-w-6xl mx-auto">
+
+                {/* Title */}
                 <h1 className="text-3xl md:text-4xl font-bold text-gray-800 mb-8">
                     Your Cart
                 </h1>
@@ -25,11 +38,13 @@ function CartPage() {
                         Loading cart...
                     </div>
                 ) : cartItems.length === 0 ? (
+
                     /* Empty Cart */
                     <div className="bg-white rounded-2xl shadow p-10 text-center">
                         <h2 className="text-2xl font-semibold text-gray-700 mb-3">
                             Your cart is empty
                         </h2>
+
                         <p className="text-gray-500 mb-6">
                             Add products to your cart and come back here.
                         </p>
@@ -41,24 +56,30 @@ function CartPage() {
                             Continue Shopping
                         </Link>
                     </div>
+
                 ) : (
                     <>
                         {/* Cart Items */}
                         <div className="space-y-4">
+
                             {cartItems.map((item) => (
                                 <div
                                     key={item.id}
                                     className="bg-white rounded-2xl shadow p-4 md:p-5 flex flex-col md:flex-row md:items-center gap-5 justify-between"
                                 >
+
                                     {/* Left Side */}
                                     <div className="flex items-center gap-4 flex-1">
-                                        {item.product_image && (
-                                            <img
-                                                src={`${BASEURL}${item.product_image}`}
-                                                alt={item.product_name}
-                                                className="w-24 h-24 object-cover rounded-xl border"
-                                            />
-                                        )}
+
+                                        <img
+                                            src={getImageUrl(item.product_image)}
+                                            alt={item.product_name}
+                                            className="w-24 h-24 object-cover rounded-xl border"
+                                            onError={(e) => {
+                                                e.target.src =
+                                                    "https://via.placeholder.com/150?text=No+Image";
+                                            }}
+                                        />
 
                                         <div>
                                             <h2 className="text-lg md:text-xl font-semibold text-gray-800">
@@ -73,6 +94,7 @@ function CartPage() {
 
                                     {/* Quantity */}
                                     <div className="flex items-center gap-3">
+
                                         <button
                                             onClick={() =>
                                                 updateQuantity(
@@ -111,13 +133,17 @@ function CartPage() {
                                     >
                                         Remove
                                     </button>
+
                                 </div>
                             ))}
+
                         </div>
 
                         {/* Summary */}
                         <div className="bg-white rounded-2xl shadow mt-8 p-6">
+
                             <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+
                                 <div>
                                     <h2 className="text-2xl font-bold text-gray-800">
                                         Total:
@@ -134,6 +160,7 @@ function CartPage() {
                                 >
                                     Proceed to Checkout
                                 </Link>
+
                             </div>
                         </div>
                     </>
