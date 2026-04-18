@@ -1,88 +1,116 @@
 from rest_framework import serializers
-from .models import Product, Category, Cart, CartItem   # ✅ FIX: Added missing imports
-from  django.contrib.auth.models import User
-# ------------------ CATEGORY ------------------
+from django.contrib.auth.models import User
+from .models import Product, Category, Cart, CartItem
+
+
+# ==========================
+# CATEGORY
+# ==========================
 class CategorySerializer(serializers.ModelSerializer):
     class Meta:
         model = Category
-        fields = '__all__'
+        fields = "__all__"
 
 
-# ------------------ PRODUCT ------------------
+# ==========================
+# PRODUCT
+# ==========================
 class ProductSerializer(serializers.ModelSerializer):
     category = CategorySerializer(read_only=True)
+    image = serializers.SerializerMethodField()
 
     class Meta:
         model = Product
-        fields = '__all__'
+        fields = "__all__"
+
+    def get_image(self, obj):
+        request = self.context.get("request")
+
+        if obj.image:
+            if request:
+                return request.build_absolute_uri(obj.image.url)
+            return obj.image.url
+
+        return None
 
 
-# ------------------ CART ITEM ------------------
+# ==========================
+# CART ITEM
+# ==========================
 class CartItemSerializer(serializers.ModelSerializer):
     product_name = serializers.CharField(
-        source='product.name',
+        source="product.name",
         read_only=True
     )
 
     product_price = serializers.DecimalField(
-        source='product.price',
+        source="product.price",
         max_digits=10,
         decimal_places=2,
         read_only=True
     )
 
-    product_image = serializers.ImageField(
-        source='product.image',
-        read_only=True
-    )
+    product_image = serializers.SerializerMethodField()
 
     class Meta:
         model = CartItem
-        fields = '__all__'
+        fields = "__all__"
+
+    def get_product_image(self, obj):
+        request = self.context.get("request")
+
+        if obj.product.image:
+            if request:
+                return request.build_absolute_uri(obj.product.image.url)
+            return obj.product.image.url
+
+        return None
 
 
-# ------------------ CART ------------------
+# ==========================
+# CART
+# ==========================
 class CartSerializer(serializers.ModelSerializer):
     items = CartItemSerializer(many=True, read_only=True)
-    total = serializers.ReadOnlyField()   # assumes model has a total property
+    total = serializers.ReadOnlyField()
 
     class Meta:
         model = Cart
-        fields = '__all__'
-
-from rest_framework import serializers
-from django.contrib.auth.models import User
+        fields = "__all__"
 
 
+# ==========================
+# USER
+# ==========================
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
-        fields = ['id', 'username', 'email']
+        fields = ["id", "username", "email"]
 
 
+# ==========================
+# REGISTER
+# ==========================
 class RegisterSerializer(serializers.ModelSerializer):
     password = serializers.CharField(write_only=True)
     password2 = serializers.CharField(write_only=True)
 
     class Meta:
         model = User
-        fields = ['username', 'email', 'password', 'password2']
+        fields = ["username", "email", "password", "password2"]
 
-    # ---------------- VALIDATION ----------------
     def validate(self, data):
-        if data['password'] != data['password2']:
+        if data["password"] != data["password2"]:
             raise serializers.ValidationError("Passwords do not match")
         return data
 
-    # ---------------- CREATE USER ----------------
     def create(self, validated_data):
-        username = validated_data['username']
-        email = validated_data.get('email', '')   # ✅ FIXED
-        password = validated_data['password']
+        validated_data.pop("password2")
 
         user = User.objects.create_user(
-            username=username,
-            email=email,
-            password=password
+            username=validated_data["username"],
+            email=validated_data.get("email", ""),
+            password=validated_data["password"]
         )
+
         return user
