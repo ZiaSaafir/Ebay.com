@@ -1,12 +1,13 @@
 import { useEffect, useState } from "react";
-import ProductCard from "../components/ProductCard";
 import Navbar from "../components/Navbar";
+import ProductCard from "../components/ProductCard";
 
 function ProductList() {
     const BASEURL = import.meta.env.VITE_DJANGO_BASE_URL;
 
     const [products, setProducts] = useState([]);
     const [filteredProducts, setFilteredProducts] = useState([]);
+
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState("");
 
@@ -72,7 +73,7 @@ function ProductList() {
             {/* Navbar */}
             <Navbar onSearch={handleSearch} />
 
-            {/* Hero Section */}
+            {/* Hero */}
             <section className="bg-gradient-to-r from-blue-600 to-indigo-700 text-white py-20 px-4">
                 <div className="max-w-7xl mx-auto text-center">
 
@@ -81,18 +82,18 @@ function ProductList() {
                     </h1>
 
                     <p className="text-lg md:text-xl text-blue-100 max-w-2xl mx-auto">
-                        Discover premium products with amazing prices and fast delivery.
+                        Discover premium products at affordable prices.
                     </p>
 
-                    <div className="mt-6 text-sm md:text-base text-blue-100">
+                    <p className="mt-5 text-sm md:text-base text-blue-100">
                         {filteredProducts.length} Products Available
-                    </div>
+                    </p>
 
                 </div>
             </section>
 
-            {/* Products Header */}
-            <div className="max-w-7xl mx-auto w-full px-4 pt-8">
+            {/* Header */}
+            <div className="max-w-7xl mx-auto w-full px-4 pt-10">
                 <div className="flex justify-between items-center border-b pb-4">
 
                     <h2 className="text-2xl font-bold text-gray-800">
@@ -106,8 +107,8 @@ function ProductList() {
                 </div>
             </div>
 
-            {/* Product Grid */}
-            <main className="flex-grow max-w-7xl mx-auto w-full px-4 py-10">
+            {/* Products */}
+            <main className="max-w-7xl mx-auto w-full px-4 py-10 flex-grow">
 
                 {filteredProducts.length === 0 ? (
                     <div className="text-center text-gray-500 text-lg">

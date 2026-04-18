@@ -1,3 +1,27 @@
+frontend/
+  src/
+    api/
+      client.js
+    components/
+      Navbar.jsx
+      ProductCard.jsx
+      Loader.jsx
+    context/
+      AuthContext.jsx
+      CartContext.jsx
+    pages/
+      Home.jsx
+      ProductDetails.jsx
+      CartPage.jsx
+      Login.jsx
+      Register.jsx
+      Checkout.jsx
+    utils/
+      auth.js
+    App.jsx
+    main.jsx
+
+
 Epnic – Full Stack E-commerce App
 
 A modern full-stack e-commerce web application built using **React (Frontend)** and **Django REST Framework (Backend)** with **JWT Authentication**.
